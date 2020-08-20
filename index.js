@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -19,7 +20,7 @@ const redirectIfAuthMiddleware = require('./middleware/redirectIfAuthMiddleware'
 const redirectIfAuthmiddleware = require('./middleware/redirectIfAuthMiddleware')
 const logoutController = require('./controllers/logout')
 
-mongoose.connect('mongodb://localhost/BlogPost', {useNewUrlParser: true})
+mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true})
 
 const app = express()
 
@@ -31,14 +32,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(fileUpload())
 app.use(expressSession({
-    secret: 'reg and enc'
+    secret: process.env.SESSION_SECRET
 }))
 app.use('*', (req, res, next)=>{
     loggedIn = req.session.userId
     next()
 })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 4000, () => {
     
 })
 
